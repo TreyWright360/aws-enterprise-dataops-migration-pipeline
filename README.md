@@ -2,6 +2,8 @@
 
 > **Portfolio evidence status:** The Terraform modules, transformation script, and DAG are published. No dated migration, throughput, recovery, or cost results are checked in. The [AWS Cloud Operations Handbook](https://github.com/TreyWright360/aws-cloud-operations-handbook) tracks the lab evidence needed for recruiter-facing claims.
 
+See the [project case study](CASE-STUDY.md) for implementation, failure modes, evidence status, and production gaps.
+
 [![Terraform](https://img.shields.io/badge/IaC-Terraform_1.8+-623CE4.svg?logo=terraform)](https://www.terraform.io)
 [![AWS](https://img.shields.io/badge/AWS-DMS_|_Glue_|_Kinesis_|_S3_CRR-FF9900.svg?logo=amazon-aws)](https://aws.amazon.com)
 [![Airflow](https://img.shields.io/badge/Orchestration-Apache_Airflow-017CEE.svg?logo=apache-airflow)](https://airflow.apache.org)
