@@ -32,8 +32,9 @@ Add end-to-end integration tests, data quality checks, lag alarms, replay and de
 
 ## CI/CD and deployment validation
 
-- **CI status:** Repair in progress (repaired invalid `secrets.*` job-level condition, awaiting validation run).
-- **PR validation run:** Pending PR checks
-- **Main branch validation run:** Pending merge to main
+- **CI status:** Verified passing without AWS credentials or terraform apply on PR and main push.
+- **PR validation run:** [Run #35787070528](https://github.com/TreyWright360/aws-enterprise-dataops-migration-pipeline/actions/runs/35787070528) (passed)
+- **Main branch validation run:** [Run #35787171875](https://github.com/TreyWright360/aws-enterprise-dataops-migration-pipeline/actions/runs/35787171875) (passed, non-deploying)
 - **Deployment safeguards:** Automatic deployment is removed from push to `main`. Deployment is isolated in `.github/workflows/deploy-production.yml`, requiring manual `workflow_dispatch` trigger and approval via the protected `production` environment.
+
 
