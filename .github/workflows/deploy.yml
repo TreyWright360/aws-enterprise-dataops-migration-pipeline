@@ -1,14 +1,13 @@
-name: DataOps CI/CD Pipeline
+name: Terraform CI Validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   lint-and-validate:
@@ -36,30 +35,3 @@ jobs:
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           soft_fail: true
-
-  deploy-pipeline:
-    name: Deploy Data Infrastructure (Prod)
-    needs: lint-and-validate
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.AWS_ACCESS_KEY_ID != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.8.0"
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: "us-east-1"
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Apply
-        run: terraform apply -var-file="environments/prod.tfvars" -auto-approve
