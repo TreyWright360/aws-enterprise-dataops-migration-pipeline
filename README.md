@@ -1,12 +1,14 @@
 # Enterprise Cloud Migration, Real-Time Streaming & DataOps Pipeline on AWS
 
+> **Portfolio evidence status:** The Terraform modules, transformation script, and DAG are published. No dated migration, throughput, recovery, or cost results are checked in. The [AWS Cloud Operations Handbook](https://github.com/TreyWright360/aws-cloud-operations-handbook) tracks the lab evidence needed for recruiter-facing claims.
+
 [![Terraform](https://img.shields.io/badge/IaC-Terraform_1.8+-623CE4.svg?logo=terraform)](https://www.terraform.io)
 [![AWS](https://img.shields.io/badge/AWS-DMS_|_Glue_|_Kinesis_|_S3_CRR-FF9900.svg?logo=amazon-aws)](https://aws.amazon.com)
 [![Airflow](https://img.shields.io/badge/Orchestration-Apache_Airflow-017CEE.svg?logo=apache-airflow)](https://airflow.apache.org)
 [![Snowflake](https://img.shields.io/badge/Data_Warehouse-Snowflake-29B5E8.svg?logo=snowflake)](https://www.snowflake.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A production-grade, multi-region DataOps platform and enterprise database migration architecture on AWS using modular Terraform. This system simulates an end-to-end legacy on-premise relational database migration using **AWS Database Migration Service (DMS)** with continuous **Change Data Capture (CDC)**, ingests high-throughput real-time IoT events via **Amazon Kinesis / Kafka**, guarantees multi-region disaster recovery via **S3 Cross-Region Replication (CRR)**, and orchestrates serverless PySpark **SCD2 (Slowly Changing Dimensions)** transformations into **Snowflake** using **Apache Airflow**.
+A portfolio architecture using modular Terraform for AWS DMS, a Kinesis stream, S3 cross-region replication, and Glue, alongside an Airflow DAG and PySpark SCD2 transformation. The code shows the intended data flow; an end-to-end migration, event producer/consumer, Snowflake integration, recovery time, and throughput still need to be demonstrated with lab evidence.
 
 ---
 
@@ -54,8 +56,8 @@ A production-grade, multi-region DataOps platform and enterprise database migrat
 | :--- | :--- |
 | **1. Operational Excellence** | Automated end-to-end pipeline orchestration via Apache Airflow DAGs; modular Terraform IaC with GitHub Actions CI/CD. |
 | **2. Security** | S3 bucket isolation with Block Public Access; customer-managed KMS AES-256 encryption at rest; least-privilege IAM roles for DMS, Glue, and Kinesis. |
-| **3. Reliability** | S3 Cross-Region Replication (CRR) from `us-east-1` to `us-west-2` achieving strict RPO/RTO disaster recovery targets; DMS continuous Change Data Capture. |
-| **4. Performance Efficiency** | Parquet columnar storage with GZIP compression reducing query execution time and S3 I/O by ~70%; Kinesis provisioned sharding for high-throughput streaming. |
+| **3. Reliability** | S3 Cross-Region Replication (CRR) is defined; RPO/RTO require a timed recovery test. |
+| **4. Performance Efficiency** | Parquet/GZIP and Kinesis are design choices; benchmark results are not yet available. |
 | **5. Cost Optimization** | S3 Intelligent-Tiering and lifecycle transitions to Standard-IA; Glue serverless worker auto-scaling scaling to zero when idle. |
 | **6. Sustainability** | Serverless compute primitives (AWS Glue G.1X workers & Lambda) eliminate idle EC2 instances. |
 
@@ -89,5 +91,5 @@ terraform init
 terraform plan -var-file="environments/prod.tfvars"
 
 # 4. Provision infrastructure
-terraform apply -var-file="environments/prod.tfvars" -auto-approve
+terraform apply -var-file="environments/dev.tfvars"
 ```
