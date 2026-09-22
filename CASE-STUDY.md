@@ -29,3 +29,11 @@ The design uses managed service roles and encryption options in Terraform. DMS r
 ## Production improvements
 
 Add end-to-end integration tests, data quality checks, lag alarms, replay and deduplication controls, a rehearsed regional recovery sequence, least-privilege review, and measured cost/performance results.
+
+## CI/CD and deployment validation
+
+- **CI status:** Repair in progress (repaired invalid `secrets.*` job-level condition, awaiting validation run).
+- **PR validation run:** Pending PR checks
+- **Main branch validation run:** Pending merge to main
+- **Deployment safeguards:** Automatic deployment is removed from push to `main`. Deployment is isolated in `.github/workflows/deploy-production.yml`, requiring manual `workflow_dispatch` trigger and approval via the protected `production` environment.
+
