@@ -93,10 +93,43 @@ resource "aws_db_instance" "source" {
   apply_immediately       = true
 }
 
+# DMS requires an account-level IAM role named exactly "dms-vpc-role"
+# (with the AWS-managed AmazonDMSVPCManagementRole policy) before it
+# will create any VPC resource, such as a replication subnet group.
+# This is a one-time account prerequisite that AWS does not create
+# automatically - without it, aws_dms_replication_subnet_group fails
+# with "AccessDeniedFault: The IAM Role ... is not configured properly."
+resource "aws_iam_role" "dms_vpc_role" {
+  name = "dms-vpc-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "dms.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "dms_vpc_role" {
+  role       = aws_iam_role.dms_vpc_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"
+}
+
+resource "time_sleep" "dms_vpc_role_propagation" {
+  depends_on      = [aws_iam_role_policy_attachment.dms_vpc_role]
+  create_duration = "15s"
+}
+
 resource "aws_dms_replication_subnet_group" "main" {
   replication_subnet_group_id          = "${var.project_name}-dms-subnets-${var.environment}"
   replication_subnet_group_description = "DMS replication instance subnets"
   subnet_ids                           = data.aws_subnets.default.ids
+
+  depends_on = [time_sleep.dms_vpc_role_propagation]
 }
 
 resource "aws_dms_replication_instance" "main" {
