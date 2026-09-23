@@ -134,7 +134,7 @@ resource "aws_dms_replication_subnet_group" "main" {
 
 resource "aws_dms_replication_instance" "main" {
   replication_instance_id    = "${var.project_name}-dms-${var.environment}"
-  replication_instance_class = "dms.t3.micro"
+  replication_instance_class = "dms.t3.small" # smallest class DMS actually offers; dms.t3.micro does not exist
   allocated_storage          = 20
   publicly_accessible        = false
 
