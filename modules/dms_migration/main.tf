@@ -54,6 +54,11 @@ resource "aws_dms_endpoint" "target_s3" {
     data_format             = "parquet"
     date_partition_enabled  = true
     compression_type        = "GZIP"
+    # Required for full-load-and-cdc to an S3 target: S3 has no native
+    # update semantics, so DMS needs an explicit column to record when
+    # each change happened. Without it, CreateReplicationTask fails
+    # with "TimestampColumnName cannot be an empty string."
+    timestamp_column_name = "dms_load_timestamp"
   }
 }
 
