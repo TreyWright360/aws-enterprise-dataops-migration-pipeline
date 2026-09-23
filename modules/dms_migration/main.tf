@@ -94,13 +94,11 @@ resource "aws_dms_replication_task" "migration_cdc" {
     ]
   })
 
-  replication_task_settings = jsonencode({
-    TargetMetadata = {
-      SupportLobs  = true
-      FullLobMode  = false
-      LobChunkSize = 64
-    }
-  })
+  # A partial TargetMetadata override was rejected by DMS
+  # (InvalidParameterValueException: TimestampColumnName cannot be an
+  # empty string) - DMS merges this into its full settings document
+  # and one of the unset fields fails validation. Omitting it lets
+  # DMS use its complete default settings instead of a partial one.
 
   tags = {
     Name = "${var.project_name}-cdc-migration"
