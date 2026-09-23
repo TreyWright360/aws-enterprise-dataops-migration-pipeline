@@ -51,6 +51,16 @@ resource "aws_iam_role_policy_attachment" "glue_s3_attach" {
   policy_arn = aws_iam_policy.glue_s3_policy.arn
 }
 
+# The job definition below only points at this location; Terraform
+# never actually uploaded the script here, so the job would fail
+# immediately with a missing-script error on its first real run.
+resource "aws_s3_object" "scd2_script" {
+  bucket = var.s3_data_lake_bucket
+  key    = "scripts/pyspark_scd2_transform.py"
+  source = "${path.module}/../../src/scripts/pyspark_scd2_transform.py"
+  etag   = filemd5("${path.module}/../../src/scripts/pyspark_scd2_transform.py")
+}
+
 resource "aws_glue_job" "scd2_transformation" {
   name     = "${var.project_name}-scd2-pyspark-${var.environment}"
   role_arn = aws_iam_role.glue_service_role.arn
@@ -69,5 +79,9 @@ resource "aws_glue_job" "scd2_transformation" {
     "--job-language"                     = "python"
     "--enable-continuous-cloudwatch-log" = "true"
     "--enable-spark-ui"                  = "true"
+    "--source_bucket"                    = var.s3_data_lake_bucket
+    "--table_path"                       = "public/orders"
   }
+
+  depends_on = [aws_s3_object.scd2_script]
 }
