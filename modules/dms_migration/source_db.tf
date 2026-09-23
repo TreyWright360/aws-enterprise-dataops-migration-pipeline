@@ -14,6 +14,24 @@ data "aws_subnets" "default" {
   }
 }
 
+data "aws_route_tables" "default" {
+  vpc_id = data.aws_vpc.default.id
+}
+
+# The DMS replication instance is deliberately not publicly accessible
+# (no public IP), so it has no route to S3's public API through the
+# default VPC's Internet Gateway. A Gateway VPC endpoint gives it a
+# private path to S3 at no hourly cost, instead of the alternative of
+# making the instance publicly accessible just to reach the internet.
+data "aws_region" "current" {}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = data.aws_vpc.default.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = data.aws_route_tables.default.ids
+}
+
 resource "random_password" "source_db" {
   length  = 20
   special = false
