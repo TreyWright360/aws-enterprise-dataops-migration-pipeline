@@ -14,6 +14,14 @@ terraform {
       version = "~> 3.6"
     }
   }
+
+  backend "s3" {
+    bucket         = "trey-portfolio-tfstate-050451394862"
+    key            = "dataops/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "portfolio-tfstate-lock"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
