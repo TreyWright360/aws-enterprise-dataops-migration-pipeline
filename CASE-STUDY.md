@@ -1,6 +1,6 @@
 # Case study: AWS migration and DataOps architecture
 
-**Portfolio status:** PARTIALLY TESTED. Deployed live to AWS on 2026-09-23. A real DMS full load moved seeded data from RDS PostgreSQL into the S3 Parquet lake with 0 errors, validated by reading the actual values back out of the migrated Parquet file. CDC apply, cross-region replication, Glue SCD2, and Kinesis streaming remain untested.
+**Portfolio status:** PARTIALLY TESTED. Deployed live to AWS on 2026-09-23. Verified: DMS full load (0 errors), ongoing CDC apply (insert/update/delete, ~10s to apply), S3 cross-region replication (~1s measured lag), and a Glue SCD2 transformation — rewritten from an unimplemented stub and hand-verified row by row. Kinesis streaming remains untested; no consumer is wired up to it.
 
 ## Business problem
 
@@ -20,7 +20,7 @@ The [handbook failure map](https://github.com/TreyWright360/aws-cloud-operations
 
 ## Test evidence and video
 
-**PARTIALLY TESTED.** [Dated evidence](https://github.com/TreyWright360/aws-cloud-operations-handbook/blob/main/evidence/dataops-dms-migration/INDEX.md) covers a real DMS full-load run: 5 rows moved from RDS PostgreSQL to S3 as Parquet, 0 errors, content verified from the downloaded file. No CDC apply validation, streaming throughput, SCD2 correctness result, restore timeline, or video is checked in yet.
+**PARTIALLY TESTED.** [Full-load evidence](https://github.com/TreyWright360/aws-cloud-operations-handbook/blob/main/evidence/dataops-dms-migration/INDEX.md): 5 rows moved from RDS PostgreSQL to S3 as Parquet, 0 errors, content verified from the downloaded file. [CDC/replication/SCD2 evidence](https://github.com/TreyWright360/aws-cloud-operations-handbook/blob/main/evidence/dataops-cdc-replication-scd2/INDEX.md): an insert, update, and delete on the source were captured and applied within ~10s; a marker object measured ~1s cross-region replication lag; the Glue SCD2 job — previously an empty stub — was implemented for real and its curated output hand-verified row by row against the source changes. Kinesis streaming throughput and a restore/recovery timeline are not checked in; no video yet.
 
 ## Security and cost controls
 
