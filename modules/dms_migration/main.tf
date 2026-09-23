@@ -57,16 +57,17 @@ resource "aws_dms_endpoint" "target_s3" {
   }
 }
 
-# DMS Source Endpoint (Simulated On-Premise Relational DB)
+# DMS Source Endpoint. Points at the lab source RDS instance defined
+# in source_db.tf, standing in for an on-premise database.
 resource "aws_dms_endpoint" "source_db" {
   endpoint_id   = "${var.project_name}-src-db-${var.environment}"
   endpoint_type = "source"
   engine_name   = "postgres"
-  server_name   = "db-onprem.corp.internal"
+  server_name   = aws_db_instance.source.address
   port          = 5432
   database_name = "production_orders"
   username      = "dms_user"
-  password      = "SecureDmsPass123!"
+  password      = random_password.source_db.result
   ssl_mode      = "require"
 }
 
@@ -74,7 +75,7 @@ resource "aws_dms_endpoint" "source_db" {
 resource "aws_dms_replication_task" "migration_cdc" {
   replication_task_id      = "${var.project_name}-cdc-task-${var.environment}"
   migration_type           = "full-load-and-cdc"
-  replication_instance_arn = "arn:aws:dms:us-east-1:123456789012:rep:EXAMPLE-REP-INSTANCE"
+  replication_instance_arn = aws_dms_replication_instance.main.replication_instance_arn
   source_endpoint_arn      = aws_dms_endpoint.source_db.endpoint_arn
   target_endpoint_arn      = aws_dms_endpoint.target_s3.endpoint_arn
 
