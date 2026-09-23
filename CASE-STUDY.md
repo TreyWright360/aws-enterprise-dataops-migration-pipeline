@@ -1,6 +1,6 @@
 # Case study: AWS migration and DataOps architecture
 
-**Portfolio status:** Infrastructure and transformation code published; end-to-end migration and recovery untested in the repository.
+**Portfolio status:** PARTIALLY TESTED. Deployed live to AWS on 2026-09-23. A real DMS full load moved seeded data from RDS PostgreSQL into the S3 Parquet lake with 0 errors, validated by reading the actual values back out of the migrated Parquet file. CDC apply, cross-region replication, Glue SCD2, and Kinesis streaming remain untested.
 
 ## Business problem
 
@@ -20,7 +20,7 @@ The [handbook failure map](https://github.com/TreyWright360/aws-cloud-operations
 
 ## Test evidence and video
 
-**DOCUMENTATION ONLY.** No dated DMS CDC validation, streaming throughput, SCD2 correctness result, restore timeline, or video is checked in.
+**PARTIALLY TESTED.** [Dated evidence](https://github.com/TreyWright360/aws-cloud-operations-handbook/blob/main/evidence/dataops-dms-migration/INDEX.md) covers a real DMS full-load run: 5 rows moved from RDS PostgreSQL to S3 as Parquet, 0 errors, content verified from the downloaded file. No CDC apply validation, streaming throughput, SCD2 correctness result, restore timeline, or video is checked in yet.
 
 ## Security and cost controls
 

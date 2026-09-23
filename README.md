@@ -1,6 +1,6 @@
 # Enterprise Cloud Migration, Real-Time Streaming & DataOps Pipeline on AWS
 
-> **Portfolio evidence status:** The Terraform modules, transformation script, and DAG are published. No dated migration, throughput, recovery, or cost results are checked in. The [AWS Cloud Operations Handbook](https://github.com/TreyWright360/aws-cloud-operations-handbook) tracks the lab evidence needed for recruiter-facing claims.
+> **Portfolio evidence status:** PARTIALLY TESTED. Deployed live to AWS on 2026-09-23. A real `full-load-and-cdc` DMS task moved seeded rows from a live RDS PostgreSQL source into the S3 Parquet data lake with 0 errors — see [dated evidence](https://github.com/TreyWright360/aws-cloud-operations-handbook/blob/main/evidence/dataops-dms-migration/INDEX.md), including five real deploy blockers found and fixed along the way. Ongoing CDC apply, cross-region replication of new objects, the Glue SCD2 job, and Kinesis streaming were not exercised in this pass.
 
 See the [project case study](CASE-STUDY.md) for implementation, failure modes, evidence status, and production gaps.
 
